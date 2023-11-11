@@ -15,6 +15,9 @@ import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooKeeper;
+import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.ZooDefs;
+import com.google.gwt.user.client.rpc;
 
 public class Executor
     implements Watcher, Runnable, DataMonitor.DataMonitorListener
@@ -47,9 +50,21 @@ public class Executor
         String znode = args[1];
         String filename = args[2];
         String exec[] = new String[args.length - 3];
+        Executor ex;
         System.arraycopy(args, 3, exec, 0, exec.length);
         try {
-            new Executor(hostPort, znode, filename, exec).run();
+            ex = new Executor(hostPort, znode, filename, exec);
+            ex.zk.create("/watch_test1", "some_gibberish".getBytes(),
+            ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT,
+            new AsyncCallback.StringCallback() {
+
+                @Override
+                public void processResult(int rc, String path, Object ctx,
+                                        String name) {
+                    System.out.println("creation_result:[rc=" + rc + ", " +
+                            "path=" + path + ", name=" + name + "]");
+                }
+            }, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -101,7 +116,6 @@ public class Executor
                 }
             } catch (IOException e) {
             }
-
         }
     }
 
