@@ -75,6 +75,21 @@ public class Executor
                     System.out.println(stat);
                 }
             }, null);
+            ex.zk.getData("/watch_test1", false,
+            new AsyncCallback.DataCallback() {
+                @Override
+                public void processResult(int rc, String path, Object ctx, byte[] bytes, Stat stat) {
+                    System.out.println(new String(bytes));
+                }
+            }, null);
+
+            ex.zk.delete("/watch_test1", -1,
+            new AsyncCallback.VoidCallback() {
+                @Override
+                public void processResult(int rc, String path, Object ctx) {
+                    System.out.println("Deleted");
+                }
+            }, null);
             ex.run();
 
             
