@@ -17,7 +17,7 @@ import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.ZooDefs;
-import com.google.gwt.user.client.rpc;
+import org.apache.zookeeper.AsyncCallback;
 
 public class Executor
     implements Watcher, Runnable, DataMonitor.DataMonitorListener
@@ -65,6 +65,18 @@ public class Executor
                             "path=" + path + ", name=" + name + "]");
                 }
             }, null);
+            ;
+            ex.zk.setData("/watch_test1", "other_gibberish".getBytes(), -1,
+            new AsyncCallback.StatCallback() {
+                @Override
+                public void processResult(int rc, String path, Object ctx,
+                                        String name) {
+                    System.out.println("hi");
+                }
+            }, null);
+            ex.run();
+
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
