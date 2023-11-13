@@ -1,3 +1,6 @@
 [submodule "GigaPaxos"]
 	path = GigaPaxos
 	url = https://github.com/phucnguyen02/CS578_PA3.git
+[submodule "gigapaxos"]
+	path = gigapaxos
+	url = https://github.com/MobilityFirst/gigapaxos.git
